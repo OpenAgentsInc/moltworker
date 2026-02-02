@@ -20,10 +20,12 @@ RUN ARCH="$(dpkg --print-architecture)" \
 # Install pnpm globally
 RUN npm install -g pnpm
 
-# Install moltbot (CLI is still named clawdbot until upstream renames)
-# Pin to specific version for reproducible builds
+# Install moltbot (upstream binary/package is still named clawdbot).
+# Create an `openclaw` wrapper symlink so user-facing surfaces can avoid the clawdbot name.
+# Pin to specific version for reproducible builds.
 RUN npm install -g clawdbot@2026.1.24-3 \
-    && clawdbot --version
+    && clawdbot --version \
+    && ln -sf "$(command -v clawdbot)" /usr/local/bin/openclaw
 
 # Create moltbot directories (paths still use clawdbot until upstream renames)
 # Templates are stored in /root/.clawdbot-templates for initialization
